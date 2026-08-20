@@ -1,0 +1,11 @@
+control_id,description
+CTL-001,"All new AI use cases require sign-off from the AI Governance Committee before development begins, with senior leadership accountable for approval."
+CTL-002,"Model performance metrics including accuracy and drift are tracked monthly and reviewed against agreed thresholds."
+CTL-003,"Application logs capture key system events for AI-enabled tools to support traceability and post-incident review."
+CTL-004,"Third-party AI vendors undergo a security and data handling questionnaire prior to onboarding."
+CTL-005,"A documented AI policy exists and is reviewed annually by the risk committee."
+CTL-006,"Data used to train or fine-tune models is reviewed for quality and completeness prior to use."
+CTL-007,"Users of AI-enabled decision tools can escalate or override outputs they believe are incorrect."
+CTL-008,"An internal audit function periodically reviews AI systems for conformance with internal policy."
+CTL-009,"Incident response procedures include a specific playbook for AI system failures or anomalous outputs."
+CTL-010,"Staff working on AI systems complete mandatory annual training on responsible AI use."

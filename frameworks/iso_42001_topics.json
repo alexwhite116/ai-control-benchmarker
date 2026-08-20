@@ -1,0 +1,15 @@
+[
+  {"id": "ISO-1", "category": "Leadership", "description": "Top management demonstrates leadership and commitment to the AI management system, including setting an AI policy."},
+  {"id": "ISO-2", "category": "Roles & Responsibilities", "description": "Roles, responsibilities, and authorities relevant to the AI management system are assigned and communicated."},
+  {"id": "ISO-3", "category": "Risk Assessment", "description": "A process exists to assess risks and opportunities specific to AI systems, including impacts on individuals and groups."},
+  {"id": "ISO-4", "category": "AI System Impact Assessment", "description": "AI system impact assessments are performed considering potential consequences for individuals, groups, and society."},
+  {"id": "ISO-5", "category": "Resource Management", "description": "Resources needed for the AI management system, including competent personnel and infrastructure, are identified and provided."},
+  {"id": "ISO-6", "category": "Competence & Awareness", "description": "Personnel are competent and aware of the AI policy, their contribution, and implications of non-conformity."},
+  {"id": "ISO-7", "category": "Lifecycle Control", "description": "Operational planning and control exist for AI system development, deployment, and decommissioning across the lifecycle."},
+  {"id": "ISO-8", "category": "Data Management", "description": "Processes govern the quality, provenance, and suitability of data used to develop and operate AI systems."},
+  {"id": "ISO-9", "category": "Third-Party & Supplier Management", "description": "Risks arising from third-party and supplier relationships involved in AI systems are identified and managed."},
+  {"id": "ISO-10", "category": "Performance Evaluation", "description": "The performance and effectiveness of the AI management system are monitored, measured, analysed, and evaluated."},
+  {"id": "ISO-11", "category": "Internal Audit", "description": "Internal audits are conducted at planned intervals to assess conformance of the AI management system."},
+  {"id": "ISO-12", "category": "Management Review", "description": "Top management reviews the AI management system at planned intervals to ensure continuing suitability and effectiveness."},
+  {"id": "ISO-13", "category": "Continual Improvement", "description": "Nonconformities are addressed and opportunities for continual improvement of the AI management system are pursued."}
+]

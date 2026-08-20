@@ -1,0 +1,20 @@
+[
+  {"id": "GOVERN-1", "category": "Govern", "description": "Organisation maintains a documented AI governance policy and roles/responsibilities for AI risk management, including senior leadership accountability."},
+  {"id": "GOVERN-2", "category": "Govern", "description": "Legal and regulatory requirements involving AI are mapped, tracked, and understood by relevant staff."},
+  {"id": "GOVERN-3", "category": "Govern", "description": "Processes exist for workforce diversity, equity, and inclusion considerations in AI risk management decisions."},
+  {"id": "GOVERN-4", "category": "Govern", "description": "Organisational culture and incentives support critical thinking and safety-first mindset in AI system design, development, and deployment."},
+  {"id": "GOVERN-5", "category": "Govern", "description": "Mechanisms exist for external and internal stakeholders to provide feedback on AI systems throughout the lifecycle."},
+  {"id": "GOVERN-6", "category": "Govern", "description": "Policies address third-party AI risks, including data, software, and system dependencies from external suppliers."},
+  {"id": "MAP-1", "category": "Map", "description": "Business and societal context of the AI system, including intended purpose and users, is documented and understood."},
+  {"id": "MAP-2", "category": "Map", "description": "Categorisation of the AI system is performed, including capabilities, usage scenarios, and deployment context."},
+  {"id": "MAP-3", "category": "Map", "description": "AI system risks and benefits are mapped for all identified users, stakeholders, and potentially impacted groups."},
+  {"id": "MAP-4", "category": "Map", "description": "Risks and benefits from third-party components, including pre-trained models, data, and software, are mapped."},
+  {"id": "MEASURE-1", "category": "Measure", "description": "Appropriate methods and metrics are identified and applied to measure AI system trustworthiness characteristics."},
+  {"id": "MEASURE-2", "category": "Measure", "description": "AI system performance, including accuracy and robustness, is evaluated against defined benchmarks and use-case requirements."},
+  {"id": "MEASURE-3", "category": "Measure", "description": "Mechanisms for tracking identified AI risks over time are in place, including feedback from monitoring and incidents."},
+  {"id": "MEASURE-4", "category": "Measure", "description": "Fairness and bias in AI system outcomes are regularly assessed using appropriate methods for the context of use."},
+  {"id": "MANAGE-1", "category": "Manage", "description": "AI risks are prioritised and responded to based on the assessment results from the Measure function."},
+  {"id": "MANAGE-2", "category": "Manage", "description": "Mechanisms exist to sustain the value of deployed AI systems, including responding to changes in context or performance."},
+  {"id": "MANAGE-3", "category": "Manage", "description": "Processes exist to document and communicate residual AI risks to relevant stakeholders and decision-makers."},
+  {"id": "MANAGE-4", "category": "Manage", "description": "Incident response, recovery, and communication plans specific to AI system failures or unexpected behaviour are established."}
+]

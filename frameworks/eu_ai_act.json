@@ -1,0 +1,13 @@
+[
+  {"id": "EUAI-1", "category": "Risk Management", "description": "A continuous risk management process is established, implemented, documented, and maintained across the AI system's lifecycle."},
+  {"id": "EUAI-2", "category": "Data Governance", "description": "Training, validation, and testing data sets are subject to data governance practices covering relevance, representativeness, and error examination."},
+  {"id": "EUAI-3", "category": "Technical Documentation", "description": "Technical documentation is drawn up before the system is placed on the market and kept up to date, demonstrating compliance with requirements."},
+  {"id": "EUAI-4", "category": "Record-Keeping", "description": "The AI system is designed to allow automatic recording of events (logs) over the system's lifetime to ensure traceability."},
+  {"id": "EUAI-5", "category": "Transparency", "description": "The AI system is designed to be sufficiently transparent so deployers can interpret outputs and use the system appropriately."},
+  {"id": "EUAI-6", "category": "Human Oversight", "description": "The AI system is designed to be effectively overseen by natural persons, including the ability to intervene or halt the system."},
+  {"id": "EUAI-7", "category": "Accuracy, Robustness, Security", "description": "The AI system achieves an appropriate level of accuracy, robustness, and cybersecurity, and performs consistently throughout its lifecycle."},
+  {"id": "EUAI-8", "category": "Quality Management", "description": "A quality management system is in place ensuring compliance, including strategy for regulatory compliance and post-market monitoring."},
+  {"id": "EUAI-9", "category": "Conformity Assessment", "description": "The AI system undergoes the relevant conformity assessment procedure prior to being placed on the market or put into service."},
+  {"id": "EUAI-10", "category": "Post-Market Monitoring", "description": "A post-market monitoring system is established and proportionate to the nature of the AI technology and risks involved."},
+  {"id": "EUAI-11", "category": "Incident Reporting", "description": "Processes exist to report serious incidents or malfunctioning to relevant market surveillance authorities within required timeframes."}
+]
