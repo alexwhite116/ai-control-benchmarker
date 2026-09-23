@@ -72,7 +72,7 @@ class ControlBenchmarker:
             scores = sim_matrix[i]
             best_idx = scores.argmax()
             best_score = scores[best_idx]
-            status = "COVERED" if best_score >= threshold else "NEEDS_REVIEW"
+            status = "LIKELY_MATCH" if best_score >= threshold else "NEEDS_REVIEW"
             results.append({
                 "framework_id": frow["id"],
                 "category": frow["category"],
@@ -87,9 +87,9 @@ class ControlBenchmarker:
     def summarise(self, results_df: pd.DataFrame, framework_name: str):
         total = len(results_df)
         needs_review = (results_df["status"] == "NEEDS_REVIEW").sum()
-        covered = total - needs_review
+        likely_matched = total - needs_review
         print(f"\n=== {framework_name.upper()} ===")
-        print(f"Coverage: {covered}/{total} controls matched  |  Needs review: {needs_review}")
+        print(f"Likely matches: {likely_matched}/{total}  |  Needs review: {needs_review}")
         if needs_review > 0:
             print("\nFlagged for review (lowest-scoring first - not confirmed gaps, just unconfirmed):")
             for _, row in results_df[results_df["status"] == "NEEDS_REVIEW"].iterrows():
@@ -102,11 +102,15 @@ def main():
     parser.add_argument("--controls", required=True, help="Path to CSV of company controls (control_id, description).")
     parser.add_argument("--framework", choices=list(FRAMEWORK_FILES.keys()) + ["all"], default="all")
     parser.add_argument("--threshold", type=float, default=None,
-                         help="Minimum similarity score to count as covered (0-1). "
+                         help="Minimum similarity score to count as a likely match (0-1). "
                               "Defaults to a value calibrated per-engine (see DEFAULT_THRESHOLDS) "
                               "since raw scores aren't comparable across engines.")
     parser.add_argument("--output", default="output/benchmark_report.csv", help="Where to write the combined CSV report.")
-    parser.add_argument("--engine", choices=list(ENGINES.keys()), default="tfidf", help="Similarity backend to use.")
+    parser.add_argument("--engine", choices=list(ENGINES.keys()), default="tfidf",
+                         help="Similarity backend to use. Defaults to tfidf because it runs "
+                              "fully offline with no model download; cross-encoder was the most "
+                              "accurate in testing (see docs/findings.md) but isn't yet backed by "
+                              "measured precision/recall, so it isn't the default until it is.")
     args = parser.parse_args()
 
     threshold = args.threshold if args.threshold is not None else DEFAULT_THRESHOLDS[args.engine]

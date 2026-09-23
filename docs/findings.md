@@ -29,7 +29,7 @@ clearly shouldn't. We then checked where the model actually placed them:
 
 Two non-matches scored *higher* than a genuine match. Every pair except
 one shares the literal word "AI" on both sides; the one clean outlier
-(0.092) is the only pair where one side never says "AI" at all. The initial hypothesis is that the model isn't heavily favouring similarity based on shared vocabulary rather than purely semantic meaning. 
+(0.092) is the only pair where one side never says "AI" at all. The initial hypothesis is that the model is heavily favouring similarity based on shared vocabulary rather than purely semantic meaning.
 
 Sentence embeddings are known to cluster in a narrow region of the vector space
 (anisotropy) rather than spreading toward 0 for "unrelated," so
@@ -54,7 +54,11 @@ regardless of size.
 Instead of using an absolute threshold, score each match by how much it stands
 out from the *other 9 company controls'* scores for that same requirement
 (z-score against the row's own mean/std) with no external calibration data
-needed, since the full candidate set is already computed. Initial hypothesis was that this would not work very well as it misses out on what happens if *none* of the controls cleanly map to one another (it only cares about what the *best* mapping relative to the others is).
+needed, since the full candidate set is already computed. Tried this despite
+a known blind spot: it only measures whether the best candidate stands out
+*relative to the other nine* — it has no way to notice if none of the ten
+are actually any good, since something is always relatively "best". Worth
+testing anyway because it's free.
 
 On the original 6 pairs this appeared to work cleanly: all 3 matches ranked above all
 3 non-matches. However, when expanded to 14 pairs (covering all 10 company controls, all
@@ -117,7 +121,7 @@ might score highly but would not necessarily significantly outperform their peer
 - known-good matches: mean margin **0.175**
 - known-spurious matches: mean margin **0.055**
 
-On average, this seemed to produce a decent result but significant outliers mean it is unrealiable: `GOVERN-5 ↔ CTL-003` (spurious) scored 0.616
+On average, this seemed to produce a decent result but significant outliers mean it is unreliable: `GOVERN-5 ↔ CTL-003` (spurious) scored 0.616
 with a margin of 0.182, beating 4 of the 7 genuine matches on *both* axes.
 CTL-003 beat its own runner-up decisively while still being wrong, because
 the runner-up (`CTL-007`) wasn't a good match either. The margin measures whether the winner beat the field but not whether the winner was correct. Combined with the generally poor performance of the similarity scores intended to determine precisely that correctness, it was decided that this was another dead end.
@@ -129,10 +133,26 @@ failure on this dataset. This suggests that no single scalar similarity score re
 quality here, at least not with general-purpose (not domain fine-tuned)
 models.
 
-**Design conclusion:** the tool doesn't auto-confirm coverage. `COVERED`
-reflects that this control is more likely to be covered but that this requires human review. Every result
-carries the actual matched text so a reviewer can check it, and results
-are sorted lowest-score-first so the most doubtful cases are surfaced at a glance.
+**Design conclusion:** the tool doesn't auto-confirm coverage. The status
+was renamed from `COVERED` to `LIKELY_MATCH` for exactly this reason —
+`COVERED` implied a verified state the evidence above doesn't support.
+`LIKELY_MATCH` reflects that this control is probably relevant but still
+requires human review. Every result carries the actual matched text so a
+reviewer can check it, and results are sorted lowest-score-first so the
+most doubtful cases are surfaced at a glance.
+
+**Caveat on the sample data itself:** 10 company controls against 42
+framework requirements means most requirements don't have a genuinely
+correct answer in the sample library at all. `argmax` still has to crown
+a winner regardless, which inflates how often a plausible-but-wrong
+control gets picked as "best" — some of the hubness above is a real model
+weakness, and some of it is an artefact of testing against a control
+library this small. A real control library would have hundreds of
+controls, most requirements would have a genuine match, and hub controls
+would have to compete against far more plausible near-misses. Worth
+stating plainly rather than let the small sample's numbers imply more
+than they can support.
+
 ## Considered and deliberately not built (yet)
 
 **Fine-tuning a domain-specific embedding model.** Would require hundreds to thousands of labeled pairs, not the ~20 hand-built
@@ -140,7 +160,11 @@ here; with this little data a fine-tuned model would memorise these exact
 sentences rather than generalize. Generating that volume via LLM-labeled
 synthetic pairs raises an obvious question: why not use an LLM directly?
 
-**Similar solution using LLM calls**: Instead of running through an embedding model and associated similairty engine, prompt an LLM to provide a judgement on which controls map and the level of coverage. This is a natural extension of this solution and would not require significant architectural rework to get working, but has been scoped out for now due to complexity of obtaining an API key or running a local model. This is firmly on the list for future consideration in the backlog.
+**LLM-as-judge**: instead of an embedding model and similarity engine,
+prompt an LLM directly to judge which control maps to each requirement and
+how well. A natural extension of this pipeline, not a rework — see the
+dedicated section below for why this is worth building next, not just
+listing as a "someday" item.
 
 **A fully autonomous agentic version**: Scraping for regulatory
 updates and making edits to the control library directly, not just recommendations, was deliberately scoped out. Everything above demonstrates that even a
