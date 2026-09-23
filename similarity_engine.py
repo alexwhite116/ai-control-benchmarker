@@ -4,25 +4,24 @@ Pluggable similarity backends for the control benchmarker.
 TfidfSimilarityEngine works offline out of the box and is what the
 CLI uses by default.
 
-EmbeddingSimilarityEngine is a stub showing how to swap in real
+EmbeddingSimilarityEngine swaps in real
 embeddings (Azure OpenAI, OpenAI, or a local sentence-transformers
-model) once you have API access / a machine with unrestricted
-internet. The rest of the codebase doesn't need to change — just
-pass a different engine into ControlBenchmarker.
+model). The code is designed to work flexibly with any embedding backend,
+so you can swap in your own.
 """
 
 from abc import ABC, abstractmethod
+from collections.abc import Callable
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
 
 class SimilarityEngine(ABC):
     """Base interface: given two lists of strings, return a similarity matrix."""
 
     @abstractmethod
     def similarity_matrix(self, texts_a: list[str], texts_b: list[str]) -> np.ndarray:
-        """Return an (len(texts_a) x len(texts_b)) matrix of similarity scores in [0, 1]."""
+        """Return an (len(texts_a) x len(texts_b)) matrix of similarity scores"""
         raise NotImplementedError
 
 
@@ -45,22 +44,15 @@ class TfidfSimilarityEngine(SimilarityEngine):
 
 
 class EmbeddingSimilarityEngine(SimilarityEngine):
-    """Stub for a real embedding backend (Azure OpenAI / OpenAI / sentence-transformers).
+    """Similarity based on real embeddings, defaulting to a local sentence-transformers model.
 
-    To activate:
-      1. pip install openai  (or azure-ai-inference, or sentence-transformers)
-      2. Fill in `embed()` below to call your provider of choice.
-      3. Pass EmbeddingSimilarityEngine() into ControlBenchmarker instead of
-         TfidfSimilarityEngine() — no other code changes required.
-
-    This is deliberately left unimplemented in this starter kit since it
-    needs an API key / model download that this environment can't reach —
-    but the interface is what matters for the portfolio: it shows you
-    designed for swappable embedding backends from day one.
+    You can swap in your own embedding function (e.g. Azure OpenAI or OpenAI) by passing
+    an embed_fn to the constructor. The function should take a list of strings and return a 2D numpy array of embeddings.
     """
 
-    def __init__(self, embed_fn=None):
-        self.embed_fn = embed_fn  # callable: list[str] -> np.ndarray of shape (n, dim)
+    def __init__(self, embed_fn: Callable[[list[str]], np.ndarray] = None):
+        from sentence_transformers import SentenceTransformer
+        self.embed_fn = embed_fn or SentenceTransformer("all-MiniLM-L6-v2").encode  # accept custom model or default to all-MiniLM-L6-v2
 
     def embed(self, texts: list[str]) -> np.ndarray:
         if self.embed_fn is None:
@@ -74,3 +66,21 @@ class EmbeddingSimilarityEngine(SimilarityEngine):
         emb_a = self.embed(texts_a)
         emb_b = self.embed(texts_b)
         return cosine_similarity(emb_a, emb_b)
+
+class CrossEncoderSimilarityEngine(SimilarityEngine):
+    """Similarity based on a cross-encoder model from sentence-transformers.
+
+    This is more accurate than the EmbeddingSimilarityEngine, but slower because it requires
+    pairwise scoring of all combinations of texts_a and texts_b.
+    """
+
+    def __init__(self, model_name: str = "cross-encoder/stsb-roberta-base"):
+        from sentence_transformers import CrossEncoder
+        self.model = CrossEncoder(model_name)
+
+    def similarity_matrix(self, texts_a: list[str], texts_b: list[str]) -> np.ndarray:
+        pairs = [(a, b) for a in texts_a for b in texts_b]
+        scores = self.model.predict(pairs)
+        if type(scores) is not np.ndarray:
+            raise AttributeError("CrossEncoder.predict() should return a numpy array, but got type: {}".format(type(scores)))
+        return scores.reshape(len(texts_a), len(texts_b))
